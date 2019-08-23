@@ -8,7 +8,7 @@ import importlib
 from .logger import VerboseLogger
 from .facade import API
 
-__all__ = ['Bot']
+__all__ = ['Bot','trigger']
 
 
 class Bot(object):
@@ -48,7 +48,6 @@ class Bot(object):
 
         self.__logger = VerboseLogger('__scraping', self.__fs['logs'], self.__charset, self.__verbose, self.__debug)
         self.__set_drivers_for_os()
-        pass  # __init__
 
     def __relative_to_absolute_path(self, path):
 
@@ -113,81 +112,56 @@ class Bot(object):
         self.log(message, 'debug')
         return self
 
-    def run(self):
+def trigger(script):
+    def dec(f):
+        def method(self):
+            # start engine (and input var scripts) execution
+            start_time = datetime.datetime.now()
 
-        # start engine (and input var scripts) execution
-        start_time = datetime.datetime.now()
+            self.log('***** Scraping started - %s *****' % start_time.strftime("%Y-%m-%d %H:%M:%S"))
+            self.debug('-> Input path: %s' % self._Bot__fs['input'])
+            self.debug('-> Output path: %s' % self._Bot__fs['output'])
+            self.debug('-> Logs path: %s' % self._Bot__fs['logs'])
+            self.debug('-> Chromedriver: %s' % self._Bot__drivers['chromedriver'])
+            self.debug('-> Geckodriver: %s' % self._Bot__drivers['geckodriver'])
+            self.debug('-> Parser: %s' % self._Bot__parser)
+            self.debug('-> Charset: %s' % self._Bot__charset)
 
-        self.log('***** Scraping started - %s *****' % start_time.strftime("%Y-%m-%d %H:%M:%S"))
-        self.debug('-> Input path: %s' % self.__fs['input'])
-        self.debug('-> Output path: %s' % self.__fs['output'])
-        self.debug('-> Logs path: %s' % self.__fs['logs'])
-        self.debug('-> Chromedriver: %s' % self.__drivers['chromedriver'])
-        self.debug('-> Geckodriver: %s' % self.__drivers['geckodriver'])
-        self.debug('-> Parser: %s' % self.__parser)
-        self.debug('-> Charset: %s' % self.__charset)
+            self.log('==> Executing input var script: "%s"' % script)
+            script_time = datetime.datetime.now()
 
-        # get input vars (scripts) list
-        scripts = [
-            entry for entry in os.listdir(self.__fs['input'])
-            if os.path.isfile(os.path.join(self.__fs['input'], entry)) and entry[-3:] == '.py'
-        ]
+            ret = None
 
-        self.debug('-> Scripts found: %s' % str([f.split('.')[0] for f in scripts]))
-        counter = 0
+            # instantiate the scraping (facade) api
+            api = API(script, self._Bot__fs, self._Bot__charset, self._Bot__parser, self._Bot__drivers,
+                self._Bot__timestamp, self._Bot__verbose, self._Bot__debug)
 
-        # loop through all input var scripts
-        for filename in scripts:
-            if filename[:2] != '__':  # and filename[-3:] == '.py':  # redundant
-                script = os.path.splitext(filename)[0]  # file name without extension
-                counter += 1
 
-                self.log('==> Executing input var script: "%s"' % script)
-                script_time = datetime.datetime.now()
+            try:
+                # call the input var script trigger injecting the API instance
+                ret = f(self, api)
 
-                # import input var script as a module
-                module = importlib.import_module(script)
+            except Exception as e:
+                # catch generic exceptions from the input var script
+                self.log('The "%s" script raised the following exception: %s'
+                            % (script, str(e)), 'error')
 
-                # check if the input var script has a (trigger) method named after its file
-                if hasattr(module, script):
+            # logging results
+            delta_time = datetime.datetime.now() - script_time
+            elapsed_time = str(math.ceil(delta_time.total_seconds()))
+            self.log('==> Script "%s" executed in %s second(s)' % (script, elapsed_time))
 
-                    # get the input var script trigger method
-                    trigger = getattr(module, script)
+            # catch no input var scripts case
 
-                    # instantiate the scraping (facade) api
-                    api = API(script, self.__fs, self.__charset, self.__parser, self.__drivers,
-                              self.__timestamp, self.__verbose, self.__debug)
+            # just the end
+            delta_time = datetime.datetime.now() - start_time
+            elapsed_time = str(math.ceil(delta_time.total_seconds()))
+            self.log('***** Scraping finished in %s second(s) *****' % elapsed_time)
 
-                    try:
-                        # call the input var script trigger injecting the API instance
-                        trigger(api)
+            if self._Bot__verbose:
+                print('\t-> Check the logs in path: %s' % self._Bot__fs['logs'])
+                print('\t-> Find the output in path: %s' % self._Bot__fs['output'])
 
-                    except Exception as e:
-                        # catch generic exceptions from the input var script
-                        self.log('The "%s" script raised the following exception: %s'
-                                 % (script, str(e)), 'error')
-
-                    # logging results
-                    delta_time = datetime.datetime.now() - script_time
-                    elapsed_time = str(math.ceil(delta_time.total_seconds()))
-                    self.log('==> Script "%s" executed in %s second(s)' % (script, elapsed_time))
-
-                else:
-                    self.log('Script "%s" must have the "%s(api)" method' % (script, script), 'error')
-            else:
-                self.debug('Ignoring file "%s" (reason: begins with "__")' % filename)
-
-        # catch no input var scripts case
-        if counter == 0:
-            self.log('No input var scripts found in %s' % self.__fs['input'], 'warning')
-
-        # just the end
-        delta_time = datetime.datetime.now() - start_time
-        elapsed_time = str(math.ceil(delta_time.total_seconds()))
-        self.log('***** Scraping finished in %s second(s) *****' % elapsed_time)
-
-        if self.__verbose:
-            print('\t-> Check the logs in path: %s' % self.__fs['logs'])
-            print('\t-> Find the output in path: %s' % self.__fs['output'])
-
-        return self
+            return ret
+        return method
+    return dec
