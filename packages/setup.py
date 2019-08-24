@@ -16,13 +16,9 @@ REQUIREMENTS = 'requirements.json'
 
 DEPENDENCIES = literal_eval(open(REQUIREMENTS, 'r', encoding='utf-8').read())
 
-if sys.version_info < tuple(map(int, DEPENDENCIES['python'].split('.'))):
-    sys.exit('Python %s+ is required (version %s found)\n'
-             'Please update Python and try again' %
-             (DEPENDENCIES['python'], '.'.join(map(str, sys.version_info[:3]))))
-
 setup(
     name='Scraping',
+    python_requires=DEPENDENCIES['python'],
     version=VERSION,
     author='',
     author_email='',

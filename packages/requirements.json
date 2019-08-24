@@ -1,5 +1,5 @@
 {
-	"python": "3.7.4",
+	"python": ">=3.6",
 	"packages": {
 		"requests": "2.22.0",
 		"selenium": "4.0.0a1",
