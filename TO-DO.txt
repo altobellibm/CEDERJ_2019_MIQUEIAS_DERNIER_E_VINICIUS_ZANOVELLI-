@@ -1,1 +1,2 @@
-- Revisar referências bibliográficas (formato/padrões) do capítulo 2 [1-24]
+- Adicionar referências do tópico 3.2
+- Revisão do tópico 3.2 (Capítulo 3)
