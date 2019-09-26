@@ -110,3 +110,8 @@ venvPath
 # IDEs
 .idea/
 .vscode/
+
+# Other
+TCC.pdf
+TCC - Copy.docx
+.~lock.TCC.docx#
