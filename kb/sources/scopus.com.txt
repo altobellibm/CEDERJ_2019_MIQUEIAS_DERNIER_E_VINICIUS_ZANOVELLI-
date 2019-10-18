@@ -1,0 +1,96 @@
+// note: "class=" means "hasClass"
+
+// open website
+https://www.scopus.com ->
+https://www.scopus.com/search/form.uri?display=basic
+
+// fill search input
+input id=searchterm1 name=searchterm1
+write "tablet" AND "direct compression" AND "hardness"
+
+// filter by last 10 years
+click button id=limitDocSearch
+select input id=PubDateType name=dateType
+expand combo id=yearFrom name=yearFrom
+select div class=ui-selectmenu-menu mediumSelect ui-front ui-selectmenu-open
+	>  ul id=yearFrom-menu
+	>  li class=ui-menu-item
+	>  div class=ui-menu-item-wrapper  >> with content={first-year} // last 10 years
+
+// do the search
+click button #searchBtnRow > button class=btn btn-primary (form submit)
+
+// possible shortcut
+result (query):
+ TITLE-ABS-KEY ( "tablet"  AND  "direct compression"  AND  "hardness" )  AND  PUBYEAR  >  2008 
+
+// possible shortcut
+url:
+https://www.scopus.com/results/results.uri?numberOfFields=0&src=s&clickedLink=&edit=&editSaveSearch=&origin=searchbasic&authorTab=&affiliationTab=&advancedTab=&scint=1&menu=search&tablin=&searchterm1=%22tablet%22+AND+%22direct+compression%22+AND+%22hardness%22&field1=TITLE_ABS_KEY&dateType=Publication_Date_Type&yearFrom=2009&yearTo=Present&loadDate=7&documenttype=All&accessTypes=All&resetFormLink=&st1=%22tablet%22+AND+%22direct+compression%22+AND+%22hardness%22&st2=&sot=b&sdt=b&sl=63&s=TITLE-ABS-KEY%28%22tablet%22+AND+%22direct+compression%22+AND+%22hardness%22%29&sid=6c5b71ead950158cfac2c201a32a03fd&searchId=6c5b71ead950158cfac2c201a32a03fd&txGid=28f34fe74ede6293315f969ebccdcdc4&sort=plf-f&originationType=b&rr=
+
+// access source to check score (impact)
+in table id=srchResultsList > tbody
+	foreach > tr class=searchArea id=resultDataRow{i} 		// even
+
+-- inside loop:
+
+// check abstract (already done by search but explicit in manual) <-- necessary?
+in table id=srchResultsList > tbody
+	> tr class={empty} id=resultLinkRow{i} 					// odd
+	> td > ul class=list-inline > li > span id=previewAbstractLinkText{i}
+		click > a class=openpreview
+		wait (js render)
+		in table id=srchResultsList > tbody
+			> tr class=panel-collapse collapse id=previewabstractrow{i}
+			> td class=abstractPreview > div class=dropdownContent 
+			> div id=previewAbstract1 class=dropdownContentWrap
+			get content > span class=txt
+			if not {keywords} in content then continue 		// next loop
+
+// check impact conditions
+click td:nth-child(5) data-type=source > a id=data-type
+if content [ 					// one of the three below:
+	#rpCard > h2 > span 		// CiteScore - to confirm  <-- probably(?)
+	#sjrCard > h2 > span		// SJR - to confirm
+	#snipCard > h2 > span		// SNIP - to confirm
+] > (x = 1) 
+&& content [					// <-- also to confirm this condition
+	click #year-button > span.ui-selectmenu-text
+	select > li class=ui-menu-item > div id=ui-id-2
+	wait (js render)
+	get #rpResult
+] > (x = 1)
+&& content [					// <-- also to confirm this condition
+	click #year-button > span.ui-selectmenu-text
+	select > li class=ui-menu-item > div id=ui-id-3
+	wait (js render)
+	get #rpResult
+] > (x = 1)
+then consider = true
+
+// go back to result list
+back()
+
+// if impact conditions are true, then access the article page
+if consider {
+
+	in table id=srchResultsList > tbody
+		> tr class=searchArea id=resultDataRow{i}
+		> td:nth-child(2) data-type=docTitle
+		click > a class=ddmDocTitle
+
+	click #ddmDownloadButton (download pdf)
+	wait until download begin and handle the stream
+
+}
+
+-- after loop:
+
+// pagination
+click div class=paginationCont > div id=resultsFooter 
+	> div class=col-md-6 (second div child)
+	> ul class=pagination > li 
+	> a data-value="{currentPage + 1}" 
+	// first child after the "a" tag with the class "selectedPage"
+
+-- repeat the loop in the table
