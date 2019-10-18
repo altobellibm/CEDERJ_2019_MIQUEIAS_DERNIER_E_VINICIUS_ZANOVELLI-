@@ -1,0 +1,5 @@
+geckodriver - WebDriver for Firefox
+Copyright (c) Mozilla Foundation
+geckodriver is made available under the Mozilla Public License Version 2.0
+Website: https://firefox-source-docs.mozilla.org/testing/geckodriver/
+Downloads: https://github.com/mozilla/geckodriver/releases
