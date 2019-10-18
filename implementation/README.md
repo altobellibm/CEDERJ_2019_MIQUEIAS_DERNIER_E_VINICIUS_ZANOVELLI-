@@ -7,9 +7,7 @@ E DA FORMULAÇÃO DE MEDICAMENTOS
 Este repositório contém uma implementação de _software_ para coleta 
 direcionada e automatizada de dados da _internet_ e uma aplicação
 desta implementação voltada para a pesquisa de aspectos específicos
-da composição e da formulação de medicamentos, inicialmente
-planejada como a primeira etapa de um modelo de inteligência 
-artificial para a indústria farmacêutica.
+da composição e da formulação de medicamentos.
 
 <br />
 
