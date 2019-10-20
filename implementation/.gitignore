@@ -110,3 +110,5 @@ venvPath
 # IDEs
 .idea/
 .vscode/
+
+applications/pharmaceutical/output/

@@ -1,13 +1,38 @@
 from scraping import engine as microframework
-from input.water_solubility import water_solubility as water
+from input.drugbank import drugbank
+
+settings = {
+    'fontes': {
+        'drugbank': {
+            'farmacos': [
+                'tylenol',
+                'ab',
+                'Atorvastatin',
+                'N-acetyltyrosine',
+                'Tannic acid',
+                'Fenofibric acid',
+                'Calcium glubionate',
+                'Ensulizole',
+                'Phenoxyethanol',
+            ],
+            'propriedades': [
+                'solubility',
+                'density',
+                'area',
+            ]
+        }
+    }
+}
+
+
 
 class Pharmaceutical(microframework.Bot):
-    @microframework.trigger('water_soludibility')
-    def water_solubility(self, api):
-        water(api)
+    @microframework.trigger('drugbank')
+    def drugbank(self, api):
+        return drugbank(api, settings)
 
 
-scrap = Pharmaceutical(dict(
+scraper = Pharmaceutical(dict(
     charset='utf-8',
     parser='html5lib',  # html5lib | lxml | html.parser
     filesystem=dict(
@@ -28,5 +53,12 @@ scrap = Pharmaceutical(dict(
 
 
 if __name__ == "__main__":
-    scrap.water_solubility()
+    try:
+        fontes = settings['fontes']
+    except KeyError:
+        scraper.log('Erro! chave \'fontes\' não encontrada')
+        raise KeyError
+    if 'drugbank' in fontes:
+        scraper.drugbank()
+
 
