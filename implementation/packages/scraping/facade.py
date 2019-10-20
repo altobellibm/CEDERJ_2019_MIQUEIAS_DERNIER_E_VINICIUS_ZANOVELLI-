@@ -37,6 +37,7 @@ class API(Drivers):
         self.__export_file = os.path.abspath(os.path.join(
             self.__fs['output'], self.__script
         ))
+        self.response = None
         pass  # __init__
 
     def __bs4(self, data):
@@ -116,6 +117,7 @@ class API(Drivers):
             # simple HTTP(S) GET request
             response = requests.get(url, params=params, headers=headers)
             response.raise_for_status()
+            self.response = response
 
         # catch exceptions
         except requests.exceptions.HTTPError as e:
@@ -129,7 +131,7 @@ class API(Drivers):
             if response.status_code == 200:
                 self.debug('Response sample: %s' % str(response.content)[:API.__RESPONSE_SAMPLE_LENGTH])
                 response.encoding = self.__charset
-                bs4 = self.__bs4(response.content)
+                bs4 = self.__bs4(response.text)
 
         return bs4
 
@@ -164,32 +166,48 @@ class API(Drivers):
 
         return bs4
 
-    def save_json(self, data):
+    def generic_save(self, data, save, file_name='', extension='json'):
         has_failed = False
 
         # building a very likely unique file name (no need to be too strict)
-        file = self.__export_file + self.__timestamp.strftime("-%H_%M_%S-%f.json")
+        file = file_name or self.__export_file + self.__timestamp.strftime("-%H_%M_%S-%f")+'.'+extension
 
-        self.debug('Saving JSON data to file: %s' % file)
+        self.debug('Saving %s data to file: %s' % (extension, file))
         self.debug('Data sample: %s' % str(data)[:API.__RESPONSE_SAMPLE_LENGTH])
 
         try:
-            # using 'append mode' to avoid any data loss (very unlikely but possible)
-            with open(file, 'a', encoding=self.__charset) as json_file:
+            save(file, data)
+            self.log('%s data saved to file: %s' % (extension, file))
 
+        # catching errors
+        except Exception as e:
+            self.log('Saving %s data to file %s has failed: %s' % (extension, file, str(e)), 'error')
+            has_failed = True
+
+        # considering (no errors raised) and (target file exists) = success
+        if (not has_failed) and os.path.isfile(file):
+            return file
+        return ''
+
+
+    def save_json(self, data, file_name=''):
+        def save(file_name, data):
+            with open(file_name, 'a', encoding=self.__charset) as json_file:
                 # simply dumping the data (in json format) to file
                 json_data = json.dumps(data, ensure_ascii=True)
                 json_file.write(json_data)
                 json_file.close()
-                self.log('JSON data saved to file: %s' % file)
+        
+        return self.generic_save(data, save, file_name=file_name, extension='json')
 
-        # catching errors
-        except Exception as e:
-            self.log('Saving JSON data to file %s has failed: %s' % (file, str(e)), 'error')
-            has_failed = True
 
-        # considering (no errors raised) and (target file exists) = success
-        return (not has_failed) and os.path.isfile(file)
+    def save_csv(self, data, file_name=''):
+        def save(file_name, data):
+            data.to_csv(file_name, sep=';', index=False)
+        
+        return self.generic_save(data, save, file_name=file_name, extension='csv')
+
+
 
     def download(self, url, filename, overwrite=True, params=None, headers=None, stream=False, chunk_bytes=524288):
         has_failed = False
