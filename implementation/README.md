@@ -257,6 +257,7 @@ durante a instalação do pacote de _scraping_.
 * [Selenium 4.0.0a1](https://www.seleniumhq.org/)
 * [html5lib 1.0.1](https://html5lib.readthedocs.io/en/latest/)
 * [lxml 4.4.1](https://lxml.de/)
+* [pandas 0.22.0](https://pandas.pydata.org/)
 
 ##### Dependências de drivers:
 
