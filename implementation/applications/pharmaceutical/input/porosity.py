@@ -1,2 +1,0 @@
-def porosity(api):
-    pass
