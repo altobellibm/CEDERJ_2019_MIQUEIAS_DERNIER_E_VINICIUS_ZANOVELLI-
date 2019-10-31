@@ -54,11 +54,5 @@ if __name__ == "__main__":
 #   - Follows good principles such as Encapsulation and DRY
 #   - Reduces complexity and lines of codes in main app avoiding code repetition
 #   - More maintainable (consider updating hundreds of sources)
-    try:
-        scrapper.drugbank()
-    except:
-        scrapper.log('Source module "%s" not found' % ("drugbank"), 'error')
-    try:
-        scrapper.merckmillipore()
-    except:
-        scrapper.log('Source module "%s" not found' % ("merckmillipore"), 'error')
+    scrapper.drugbank()
+    scrapper.merckmillipore()
