@@ -1,29 +1,9 @@
 from scraping import engine as microframework
 from input.drugbank import drugbank
+import json
 
-settings = {
-    'fontes': {
-        'drugbank': {
-            'farmacos': [
-                'tylenol',
-                'ab',
-                'Atorvastatin',
-                'N-acetyltyrosine',
-                'Tannic acid',
-                'Fenofibric acid',
-                'Calcium glubionate',
-                'Ensulizole',
-                'Phenoxyethanol',
-            ],
-            'propriedades': [
-                'solubility',
-                'density',
-                'area',
-            ]
-        }
-    }
-}
-
+with open('settings.json') as json_file:
+    settings = json.load(json_file)
 
 
 class Pharmaceutical(microframework.Bot):

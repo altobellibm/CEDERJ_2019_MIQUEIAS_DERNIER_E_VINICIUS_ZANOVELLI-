@@ -1,0 +1,22 @@
+{
+    "fontes": {
+        "drugbank": {
+            "farmacos": [
+                "tylenol",
+                "ab",
+                "Atorvastatin",
+                "N-acetyltyrosine",
+                "Tannic acid",
+                "Fenofibric acid",
+                "Calcium glubionate",
+                "Ensulizole",
+                "Phenoxyethanol"
+            ],
+            "propriedades": [
+                "solubility",
+                "density",
+                "area"
+            ]
+        }
+    }
+}
