@@ -127,6 +127,9 @@ class Bot(object):
         self.log(message, 'debug')
         return self
 
+# QUESTIONS: what's the idea behind double nesting this piece of code out of its scope and what means "dec(f)"?
+# SUGGESTION: -> reduce complexity and make the code more cohesive (Closure, SRP, Low Coupling, Encapsulation) 
+               # by removing redundant nestings and sticking to more clear names
 def trigger(script):
     def dec(f):
         def method(self):

@@ -17,6 +17,14 @@
                 "density",
                 "area"
             ]
+        },
+        "merckmillipore": {
+            "farmacos": [
+                "Input"
+            ],
+            "propriedades": [
+                "Output"
+            ]
         }
     }
 }
