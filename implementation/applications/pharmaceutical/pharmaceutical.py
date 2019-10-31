@@ -8,7 +8,7 @@ from scraping import engine as microframework
 #   - Reduces complexity and lines of codes in main app avoiding code repetition
 #   - More maintainable (consider updating hundreds of sources)
 from sources.drugbank import drugbank
-from sources.merckmillipore import merckmillipore
+from sources.merck import merck
 
 class Pharmaceutical(microframework.Bot):
 
@@ -22,9 +22,9 @@ class Pharmaceutical(microframework.Bot):
 #   - Follows good principles such as Encapsulation, SRP, and DRY
 #   - Reduces complexity and lines of codes in main app avoiding code repetition
 #   - More maintainable (consider updating hundreds of sources)
-    @microframework.trigger('merckmillipore')
-    def merckmillipore(self, api):
-        return merckmillipore(api, scrapper.get_sources())
+    @microframework.trigger('merck')
+    def merck(self, api):
+        return merck(api, scrapper.get_sources())
 
 
 scrapper = Pharmaceutical(dict(
