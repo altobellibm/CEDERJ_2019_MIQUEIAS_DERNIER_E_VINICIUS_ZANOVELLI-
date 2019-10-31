@@ -29,7 +29,7 @@ class Pharmaceutical(microframework.Bot):
 scrapper = Pharmaceutical(dict(
     charset='utf-8',
     parser='html5lib',  # html5lib | lxml | html.parser
-    settings='./settings.json',
+    settings='./sources/settings.json',
     filesystem=dict(
         sources='./sources/',
         output='./output/',

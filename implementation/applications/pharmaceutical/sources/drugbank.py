@@ -8,8 +8,8 @@
 # @trigger
 def drugbank(api, settings):
     # drugbank, outubro de 2019
-    farmacos = settings['fontes']['drugbank'].get('farmacos',[])
-    propriedades = settings['fontes']['drugbank'].get('propriedades',[])
+    farmacos = settings['sources']['drugbank'].get('input',[])
+    propriedades = settings['sources']['drugbank'].get('output',[])
     base_url = 'https://www.drugbank.ca'
     search_url = 'https://www.drugbank.ca/unearth/q'
     output = []

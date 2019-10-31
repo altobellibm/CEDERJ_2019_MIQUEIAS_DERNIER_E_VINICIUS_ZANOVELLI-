@@ -1,7 +1,8 @@
 {
-    "fontes": {
+    "sources": {
         "drugbank": {
-            "farmacos": [
+            "rules": [],
+            "input": [
                 "tylenol",
                 "ab",
                 "Atorvastatin",
@@ -12,17 +13,18 @@
                 "Ensulizole",
                 "Phenoxyethanol"
             ],
-            "propriedades": [
+            "output": [
                 "solubility",
                 "density",
                 "area"
             ]
         },
         "merckmillipore": {
-            "farmacos": [
+            "rules": [],
+            "input": [
                 "Input"
             ],
-            "propriedades": [
+            "output": [
                 "Output"
             ]
         }

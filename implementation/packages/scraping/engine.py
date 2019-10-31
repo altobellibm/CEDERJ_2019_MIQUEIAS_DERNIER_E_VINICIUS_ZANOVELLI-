@@ -74,6 +74,7 @@ class Bot(object):
             for source in data:
                 self.__sources[source] = {}
                 for key in data[source]:
+                    self.__sources[source][key] = {}
                     self.__sources[source][key] = data[source][key]
 
     def get_sources(self):
