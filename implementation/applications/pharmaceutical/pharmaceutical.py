@@ -29,6 +29,6 @@ scrapper = Pharmaceutical(dict(
 
 if __name__ == "__main__":
     try:
-        scrapper.drugbanks()
+        scrapper.drugbank()
     except:
         scrapper.log('Source module "%s" not found' % ("drugbank"), 'error')
