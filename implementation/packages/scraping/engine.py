@@ -43,8 +43,8 @@ class Bot(object):
                 if not os.path.isdir(self.__fs[path]):
                     os.makedirs(self.__fs[path])
 
-        # add input directory to system "PATH"
-        sys.path.append(self.__fs['input'])
+        # add sources directory to system "PATH"
+        sys.path.append(self.__fs['sources'])
 
         self.__logger = VerboseLogger('__scraping', self.__fs['logs'], self.__charset, self.__verbose, self.__debug)
         self.__set_drivers_for_os()
@@ -119,7 +119,7 @@ def trigger(script):
             start_time = datetime.datetime.now()
 
             self.log('***** Scraping started - %s *****' % start_time.strftime("%Y-%m-%d %H:%M:%S"))
-            self.debug('-> Input path: %s' % self._Bot__fs['input'])
+            self.debug('-> Sources modules path: %s' % self._Bot__fs['sources'])
             self.debug('-> Output path: %s' % self._Bot__fs['output'])
             self.debug('-> Logs path: %s' % self._Bot__fs['logs'])
             self.debug('-> Chromedriver: %s' % self._Bot__drivers['chromedriver'])
@@ -127,7 +127,7 @@ def trigger(script):
             self.debug('-> Parser: %s' % self._Bot__parser)
             self.debug('-> Charset: %s' % self._Bot__charset)
 
-            self.log('==> Executing input var script: "%s"' % script)
+            self.log('==> Executing source module script: "%s"' % script)
             script_time = datetime.datetime.now()
 
             ret = None

@@ -1,5 +1,5 @@
 from scraping import engine as microframework
-from input.drugbank import drugbank
+from sources.drugbank import drugbank
 import json
 
 with open('settings.json') as json_file:
@@ -16,7 +16,7 @@ scraper = Pharmaceutical(dict(
     charset='utf-8',
     parser='html5lib',  # html5lib | lxml | html.parser
     filesystem=dict(
-        input='./input/',
+        sources='./sources/',
         output='./output/',
         logs='./logs/',
         drivers=dict(
