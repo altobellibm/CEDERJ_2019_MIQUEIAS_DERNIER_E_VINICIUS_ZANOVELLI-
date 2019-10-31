@@ -1,20 +1,16 @@
 from scraping import engine as microframework
 from sources.drugbank import drugbank
-import json
-
-with open('settings.json') as json_file:
-    settings = json.load(json_file)
-
 
 class Pharmaceutical(microframework.Bot):
     @microframework.trigger('drugbank')
     def drugbank(self, api):
-        return drugbank(api, settings)
+        return drugbank(api, scrapper.get_sources())
 
 
-scraper = Pharmaceutical(dict(
+scrapper = Pharmaceutical(dict(
     charset='utf-8',
     parser='html5lib',  # html5lib | lxml | html.parser
+    settings='./settings.json',
     filesystem=dict(
         sources='./sources/',
         output='./output/',
@@ -31,14 +27,8 @@ scraper = Pharmaceutical(dict(
     debug=False,
 ))
 
-
 if __name__ == "__main__":
     try:
-        fontes = settings['fontes']
-    except KeyError:
-        scraper.log('Erro! chave \'fontes\' não encontrada')
-        raise KeyError
-    if 'drugbank' in fontes:
-        scraper.drugbank()
-
-
+        scrapper.drugbanks()
+    except:
+        scrapper.log('Source module "%s" not found' % ("drugbank"), 'error')

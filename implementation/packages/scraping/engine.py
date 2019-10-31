@@ -4,6 +4,7 @@ import platform
 import datetime
 import math
 import importlib
+import json
 
 from .logger import VerboseLogger
 from .facade import API
@@ -24,6 +25,8 @@ class Bot(object):
         self.__fs = params['filesystem']
         self.__timestamp = datetime.datetime.now()
         self.__drivers = dict()
+        self.__settings = params['settings']
+        self.__sources = dict()
         self.__logger = None
 
         # resolve/create paths and convert "relative" ones to "absolute"
@@ -40,13 +43,14 @@ class Bot(object):
                     self.__fs[path] = os.path.abspath(os.path.join(
                         self.__relative_to_absolute_path(self.__fs[path]), *date.split('/')
                     ))
-                if not os.path.isdir(self.__fs[path]):
+                if not os.path.isdir(self.__fs[path]) and not os.path.isfile(self.__fs[path]):
                     os.makedirs(self.__fs[path])
 
         # add sources directory to system "PATH"
         sys.path.append(self.__fs['sources'])
 
         self.__logger = VerboseLogger('__scraping', self.__fs['logs'], self.__charset, self.__verbose, self.__debug)
+        self.__load_sources(self.__relative_to_absolute_path(self.__settings))
         self.__set_drivers_for_os()
 
     def __relative_to_absolute_path(self, path):
@@ -63,6 +67,17 @@ class Bot(object):
             # print('%s converted to %s' % (path, dir))  # used for dev debugging
 
         return dir
+
+    def __load_sources(self, filename):
+        with open(filename) as json_file:
+            data = json.load(json_file)
+            for source in data:
+                self.__sources[source] = {}
+                for key in data[source]:
+                    self.__sources[source][key] = data[source][key]
+
+    def get_sources(self):
+        return self.__sources
 
     def __set_drivers_for_os(self):
 
