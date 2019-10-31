@@ -1,3 +1,4 @@
+import sys
 from scraping import engine as microframework
 
 # SUGGESTION: -> dependencies could be handled by the package/engine
@@ -43,13 +44,25 @@ scrapper = Pharmaceutical(dict(
     debug=False,
 ))
 
+def run_source_script(source_name, scrapper):
+    if hasattr(scrapper, source_name):
+        module = getattr(scrapper, source_name)
+        scrapper.log('Starting "%s" source module script' % source_name)
+        module()
+    else:
+        scrapper.log('Source "%s" not found or not enabled' % (source_name), 'error')
+
 if __name__ == "__main__":
 
-# SUGGESTION: -> sources triggers should be automatic based on a loop through all sources with settings
-            # no need to manually trigger each one (consider managing hundreds of sources)
-#   - Allows new sources to be included without requiring changing the code (consider having hundreds of sources)
-#   - Follows good principles such as Encapsulation and DRY
-#   - Reduces complexity and lines of codes in main app avoiding code repetition
-#   - More maintainable (consider updating hundreds of sources)
-    scrapper.drugbank()
-    scrapper.merckmillipore()
+    params = sys.argv[1:]
+    sources = scrapper.get_sources()['sources']
+
+    if len(params) > 0:
+        for source in params:               # order matters here (first checking params and then the sources list)
+            if source.lower() in sources:   # considering params first so execution order is delegated to command line
+                run_source_script(source.lower(), scrapper)
+            else:
+                scrapper.log('Source script "%s" not found' % (source.lower()), 'warning')
+    else:
+        for source in sources:              # run all scripts
+            run_source_script(source.lower(), scrapper)
