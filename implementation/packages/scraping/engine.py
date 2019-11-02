@@ -69,7 +69,7 @@ class Bot(object):
         return dir
 
     def __load_sources(self, filename):
-        with open(filename) as json_file:
+        with open(filename,encoding="utf-8") as json_file:
             data = json.load(json_file)
             for source in data:
                 self.__sources[source] = {}

@@ -3,6 +3,7 @@ import re
 import datetime
 import math
 import json
+import time
 
 import requests
 import requests.exceptions
@@ -38,6 +39,7 @@ class API(Drivers):
             self.__fs['output'], self.__script
         ))
         self.response = None
+        self.last_call = None
         pass  # __init__
 
     def __bs4(self, data):
@@ -102,8 +104,28 @@ class API(Drivers):
         # terminate browser/driver instance and return a BeautifulSoup4 instance
         browser.quit()
         return data if data is None else self.__bs4(data)
+    
+    def __wait_and_retry(self, func, wait=2, retry=2):
+        now = datetime.datetime.now()
+        ret = None
+        for i in range(retry):
+            if not self.last_call or (now-self.last_call).seconds < wait:
+                if self.last_call:
+                    t = wait - (now-self.last_call).seconds
+                    self.log('wait %d seconds' % t)
+                    time.sleep(wait - (now-self.last_call).seconds)
+                self.last_call = datetime.datetime.now()
+            ret = func()
+            if ret:
+                return ret
+            self.log('retry')
+        return ret
 
-    def get(self, url, params=None, headers=None):
+    def get(self,url, params=None, headers=None, wait=1,retry=2):
+        f = lambda : self.__get(url, params=params, headers=headers)
+        return self.__wait_and_retry(f, wait = wait, retry = retry)
+
+    def __get(self, url, params=None, headers=None):
 
         bs4 = None
         params = [] if params is None else params
@@ -203,7 +225,7 @@ class API(Drivers):
 
     def save_csv(self, data, file_name=''):
         def save(file_name, data):
-            data.to_csv(file_name, sep=';', index=False)
+            data.to_csv(file_name, sep=';', index=False, encoding='cp1252')
         
         return self.generic_save(data, save, file_name=file_name, extension='csv')
 
