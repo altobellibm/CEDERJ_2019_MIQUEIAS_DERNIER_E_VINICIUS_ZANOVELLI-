@@ -5,10 +5,10 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/items.html
 
-import scrapy
+#import scrapy
 
 
-class FarmaciaItem(scrapy.Item):
+#class FarmaciaItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    pass
+    #pass
