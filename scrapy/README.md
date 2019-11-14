@@ -26,11 +26,11 @@ pip install .\farmacia
 Digte no console
 
 ```console
-python farmacia {drugbank,merck} configfile [-h] [--tipo {csv,json}] [--saida SAIDA]
+python farmacia {drugbank,merck,scopus} configfile [-h] [--tipo {csv,json}] [--saida SAIDA]
 ```
 
 argumentos posicionais (obrigatórios):<br/>
-  * **{drugbank,merck}**
+  * **{drugbank,merck,scopus}**
   * **configfile**:         Arquivo de configuração formato json com as configurações específicas para cada site
 
 argumentos opcionais:<br/>

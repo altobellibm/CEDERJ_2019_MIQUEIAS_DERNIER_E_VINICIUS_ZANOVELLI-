@@ -26,8 +26,8 @@ class CSVExporter(PythonItemExporter):
     def start_exporting(self):
         self.data = []
     def export_item(self,item):
-        item = {k.encode('cp1252', errors='ignore').decode('cp1252', errors='ignore'): 
-            v.encode('cp1252', errors='ignore').decode('cp1252', errors='ignore') for k, v in item.items()}
+        item = {str(k).encode('cp1252', errors='ignore').decode('cp1252', errors='ignore'): 
+            str(v).encode('cp1252', errors='ignore').decode('cp1252', errors='ignore') for k, v in item.items()}
 
         self.data.append(item)
     def finish_exporting(self):
