@@ -1,5 +1,5 @@
 from scrapy import signals
-from scrapy.exporters import PythonItemExporter, CsvItemExporter
+from scrapy.exporters import PythonItemExporter
 import pandas as pd
 import json
 

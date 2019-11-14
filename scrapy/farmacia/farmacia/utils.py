@@ -17,7 +17,7 @@ def flatten_json(y):
     flatten(y)
     return out
 
-class SettingsSpyder(scrapy.Spider):
+class SettingsSpyder(scrapy.spiders.Spider):
     def __init__(self,*args,usersettings='',outputfile='',tipo=['json'],**kwargs):
         self.user_settings = {}
         self.outputfile = outputfile
