@@ -7,9 +7,9 @@ import requests
 import datetime
 import logging
 
-from ..utils import SettingsSpyder
+from .spiders import BaseSpider
 
-class ScopusSpider(SettingsSpyder):
+class ScopusSpider(BaseSpider):
     name = 'scopus'
     pagLen = 100
     custom_settings ={
