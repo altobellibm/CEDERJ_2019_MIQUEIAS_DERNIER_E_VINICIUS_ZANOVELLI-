@@ -3,7 +3,22 @@ from scrapy.exporters import PythonItemExporter
 import pandas as pd
 import json
 
-from .utils import flatten_json
+#from .utils import flatten_json
+def flatten_json(y):
+    out = {}
+
+    def flatten(x, name=''):
+        if type(x) is dict:
+            for a in x:
+                flatten(x[a], name + a + '_')
+        elif type(x) is list:
+            for a in x:
+                flatten(a, name + '_')
+        else:
+            out[name[:-1]] = x
+
+    flatten(y)
+    return out
 
 class JSONExporter(PythonItemExporter):
     def __init__(self, file_name):
