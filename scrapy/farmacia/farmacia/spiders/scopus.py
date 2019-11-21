@@ -5,9 +5,9 @@ import bs4 as bs
 import json
 import requests
 
-from ..utils import SettingsSpyder
+from .spiders import BaseSpider
 
-class ScopusSpider(SettingsSpyder):
+class ScopusSpider(BaseSpider):
     name = 'scopus'
 
     def start_requests(self):

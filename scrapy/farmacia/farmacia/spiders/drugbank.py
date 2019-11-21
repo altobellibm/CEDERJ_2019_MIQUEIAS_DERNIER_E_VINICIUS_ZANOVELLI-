@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import urllib
-from ..utils import SettingsSpyder
+from .spiders import BaseSpider
 
-class DrugBankSpider(SettingsSpyder):
+class DrugBankSpider(BaseSpider):
     name = 'drugbank'
 
     def start_requests(self):

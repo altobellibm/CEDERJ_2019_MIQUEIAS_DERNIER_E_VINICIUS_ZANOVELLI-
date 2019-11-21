@@ -3,9 +3,9 @@ import scrapy
 import urllib.parse
 import bs4 as bs
 
-from ..utils import SettingsSpyder
+from .spiders import BaseSpider
 
-class MerckSpider(SettingsSpyder):
+class MerckSpider(BaseSpider):
     name = 'merck'
 
     def start_requests(self):

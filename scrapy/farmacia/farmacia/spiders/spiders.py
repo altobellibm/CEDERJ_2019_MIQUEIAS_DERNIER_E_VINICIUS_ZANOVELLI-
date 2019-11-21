@@ -1,7 +1,7 @@
 import scrapy
 import json
 
-class SettingsSpyder(scrapy.spiders.Spider):
+class BaseSpider(scrapy.spiders.Spider):
     def __init__(self,*args,usersettings='',outputfile='',tipo=['json'],**kwargs):
         self.user_settings = {}
         self.outputfile = outputfile
