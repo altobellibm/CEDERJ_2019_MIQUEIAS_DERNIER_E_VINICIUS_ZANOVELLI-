@@ -35,13 +35,16 @@ class FarmaciaSpiderMiddleware(object):
     #    for i in result:
     #        yield i
 
-    #def process_spider_exception(self, response, exception, spider):
+    def process_spider_exception(self, response, exception, spider):
         # Called when a spider or process_spider_input() method
         # (from other spider middleware) raises an exception.
 
         # Should return either None or an iterable of Request, dict
         # or Item objects.
-        #pass
+
+        item = {'error': 'erro'}
+        return item
+
 
     #def process_start_requests(self, start_requests, spider):
         # Called with the start requests of the spider, and works
