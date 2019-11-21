@@ -65,14 +65,14 @@ class DrugBankSpider(SettingsSpyder):
                         farmaco_output['propriedades'].append(propriedade_output)
             yield farmaco_output
 
-    def getName(self, response):
-        name = response.css('h1')
-        if name:
-            name = bs.BeautifulSoup(name.get(), features='lxml')
-        if name.find('span'):
-            name.find('span').decompose()
-        name = name.text.strip()
-        return name if name else ''
+    #def getName(self, response):
+        #name = response.css('h1')
+        #if name:
+        #    name = bs.BeautifulSoup(name.get(), features='lxml')
+        #if name.find('span'):
+        #    name.find('span').decompose()
+        #name = name.text.strip()
+        #return name if name else ''
 
         
 

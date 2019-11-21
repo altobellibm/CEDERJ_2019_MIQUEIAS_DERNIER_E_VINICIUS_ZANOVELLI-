@@ -5,20 +5,20 @@
 # See documentation in:
 # https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 
-from scrapy import signals
+#from scrapy import signals
 
 
-class FarmaciaSpiderMiddleware(object):
+#class FarmaciaSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the spider middleware does not modify the
     # passed objects.
 
-    @classmethod
-    def from_crawler(cls, crawler):
+    #@classmethod
+    #def from_crawler(cls, crawler):
         # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
+        #s = cls()
+        #crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
+        #return s
 
     #def process_spider_input(self, response, spider):
         # Called for each response that goes through the spider
@@ -52,8 +52,8 @@ class FarmaciaSpiderMiddleware(object):
         #for r in start_requests:
         #    yield r
 
-    def spider_opened(self, spider):
-        spider.logger.info('Spider opened: %s' % spider.name)
+    #def spider_opened(self, spider):
+        #spider.logger.info('Spider opened: %s' % spider.name)
 
 
 #class FarmaciaDownloaderMiddleware(object):
