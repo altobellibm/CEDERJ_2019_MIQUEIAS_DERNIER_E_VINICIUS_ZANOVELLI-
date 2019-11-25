@@ -19,8 +19,8 @@ class ScopusSpider(BaseSpider):
     }
     
     def start_requests(self):
-        yield scrapy.Request(url='https://scopus.com/', callback=self.generateCookie, dont_filter=True)
-    def generateCookie(self, response):
+        yield scrapy.Request(url='https://scopus.com/', callback=self.api_search, dont_filter=True)
+    def api_search(self, response):
         count = self.user_settings.get('count',0)
         search = self.user_settings['busca']
         apiKey = self.user_settings['api-key']
